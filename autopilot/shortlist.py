@@ -9,7 +9,7 @@ Hard gates (never shortlisted): location FAIL (e.g. remote restricted to other c
 "no sponsorship" abroad), language FAIL (undeclared language required), excluded by the
 candidate (do_not_draft), already applied, closed/expired.
 Uncertain (shortlisted, flagged): sponsorship not stated, Istanbul onsite (relocation),
-last-resort locations (work right unverified), language bar above B2, preliminary score only.
+last-resort locations (work right unverified), language bar above B2. Only Claude-ranked jobs are listed.
 
 Numbers are stable for the day: "apply to 1, 3" always refers to state/shortlist_<date>.json.
 
@@ -84,10 +84,7 @@ def build(dry_run: bool = False) -> dict:
         score = e.get("rank_score")
         prelim = False
         if status != "ranked":
-            if status == "new" and e.get("local_score") is not None:   # local first-pass score (Qwen), if enabled
-                score, prelim = e["local_score"], True
-            else:
-                continue
+            continue   # only Claude-ranked jobs; Qwen's fit score is never a ranking signal (weak correlation, 2026-11-10)
         title, company = e.get("title", ""), e.get("company", "")
         # ---- hard gates -------------------------------------------------------------
         reason = None

@@ -95,16 +95,28 @@ def mem_free_pct() -> int | None:
     return int(m.group(1)) if m else None
 
 
+def loaded_models() -> list[str] | None:
+    """Names of models Ollama currently holds in memory (None if Ollama is unreachable)."""
+    try:
+        return [m["name"] for m in _get("/api/ps").get("models", [])]
+    except Exception:  # noqa: BLE001
+        return None
+
+
 def unload() -> None:
     """Free the model's memory now (keep_alive 0)."""
     cfg = _cfg()
     try:
         if cfg.get("model") not in [m["name"] for m in _get("/api/ps").get("models", [])]:
-            return                       # not loaded: a generate call would load ~29 GB just to unload it
+            return                       # not loaded: a generate call would load the model just to unload it
         req = urllib.request.Request(cfg.get("host", "http://localhost:11434") + "/api/generate",
                                      data=json.dumps({"model": cfg["model"], "keep_alive": 0}).encode(),
                                      headers={"Content-Type": "application/json"})
         urllib.request.urlopen(req, timeout=30).read()
+        for _ in range(15):              # wait until Ollama has actually released it
+            if cfg["model"] not in (loaded_models() or []):
+                break
+            time.sleep(1)
     except Exception:  # noqa: BLE001
         pass
 

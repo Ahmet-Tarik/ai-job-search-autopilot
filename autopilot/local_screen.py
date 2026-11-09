@@ -81,6 +81,9 @@ def main() -> int:
                     continue
                 res, meta = job_assess.assess(e.get("title", ""), e.get("company", ""), e.get("location", ""), text)
                 rec["decisions"].append({"key": key, "seconds": meta.get("seconds"), "mem_free_pct": local_llm.mem_free_pct(),
+                                         "swap_mb": swap_used_mb(), "model": st["model"],
+                                         "evidence_dropped": res["evidence_dropped"] if res else None,
+                                         "category": res["assessment"]["category"] if res else None,
                                          "outcome": res["outcome"] if res else "fallback",
                                          "error": None if res else str(meta.get("error") or meta.get("skipped"))[:120],
                                          **({"fit": res["assessment"]["fit_score"], "eligibility": res["eligibility"],
@@ -115,6 +118,9 @@ def main() -> int:
                            "median_seconds": sorted(secs)[len(secs) // 2] if secs else None,
                            "max_seconds": max(secs) if secs else None,
                            "mem_free_pct_min": min([d["mem_free_pct"] for d in rec["decisions"] if d.get("mem_free_pct") is not None], default=None),
+                           "swap_mb_max": max([d["swap_mb"] for d in rec["decisions"] if d.get("swap_mb") is not None], default=None),
+                           "evidence_dropped_total": sum(d.get("evidence_dropped") or 0 for d in rec["decisions"]),
+                           "model_unloaded": local_llm.loaded_models() == [],
                            "mem_free_pct_after": local_llm.mem_free_pct(), "swap_mb_after": swap_used_mb()})
         if not a.dry_run and results:
             # Reload and merge only our fields; never overwrite a status someone else changed meanwhile.

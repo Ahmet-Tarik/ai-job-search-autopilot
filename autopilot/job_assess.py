@@ -32,7 +32,16 @@ THRESHOLDS = {"internship": 50, "graduate_program": 50, "new_grad": 50, "junior"
 TECH_TITLE = re.compile(r"software|yaz[ıi]l[ıi]m|developer|geli[sş]tirici|engineer|m[üu]hendis|backend|back-end|full ?stack|"
                         r"frontend|data|veri|\bai\b|yapay zeka|machine learning|\bml\b|python|\.net|c#|java|qa|test|devops|"
                         r"cloud|programm|intern|staj", re.I)
-SENIOR_TITLE = re.compile(r"\b(senior|sr\.?|lead|principal|staff|head|architect|kıdemli|uzman yazılım)\b", re.I)
+# Unambiguous seniority words only. "Uzman" (specialist), "Head", "Architect" etc. are NOT here: in Turkish and
+# other postings they are used for entry-level roles too (BluePython "Uzman Yazılım Mühendisi" asks 1-3 years).
+SENIOR_TITLE = re.compile(r"\b(senior|sr\.?|lead|principal|staff|kıdemli)\b", re.I)
+JUNIOR_TITLE = re.compile(r"\b(intern|internship|staj|stajyer|trainee|junior|jr\.?|entry|new ?grad|graduate|working student|"
+                          r"co-?op|apprentice)", re.I)
+# Body-text signs of a software role; "not a software role" needs the posting to show none of them, so a wrong
+# Qwen category alone can never reject a job.
+SOFTWARE_SIGNAL = re.compile(r"python|\bjava\b|javascript|typescript|c#|\.net|c\+\+|\bsql\b|\bapi\b|\bapis\b|backend|back-end|"
+                             r"frontend|front-end|full ?stack|software develop|software engineer|developer|programm|coding|"
+                             r"\bcode\b|yaz[ıi]l[ıi]m|geli[sş]tir|\bkod|\bgit\b|php|golang|kotlin|react|node", re.I)
 CANDIDATE_LANGS = {"english", "turkish", "türkçe", "ingilizce", "turkce"}
 # Natural languages the candidate does NOT speak (programming languages never count).
 OTHER_LANGS = re.compile(r"german|deutsch|almanca|french|fran[cç]ais|frans[ıi]zca|spanish|espa[nñ]ol|[ıi]spanyolca|dutch|"
@@ -114,6 +123,9 @@ SYSTEM = (
 
 
 def _norm(s: str) -> str:
+    import html
+    s = re.sub(r"<[^>]+>", " ", s or "")          # postings may carry HTML (e.g. "<li>Have <strong>3+ years</strong>")
+    s = html.unescape(s)
     s = unicodedata.normalize("NFKC", s).lower()
     s = re.sub(r"[‘’“”\"'`]", "", s)
     return re.sub(r"\s+", " ", s).strip()
@@ -168,12 +180,18 @@ def decide(a: Assessment, text: str, title: str, listed_location: str = "") -> d
         reasons.append(f"requires {', '.join(other_langs)}: \"{ev_lang[0][:120]}\"")
     yrs = min_years(a.experience_evidence) if exp_ok else None
     senior_by_years = yrs is not None and yrs >= 3
-    if SENIOR_TITLE.search(title) or senior_by_years:
+    # Title-based seniority only for unambiguous words, and never when the title also says junior/intern or a
+    # verified quote asks for fewer than 3 years.
+    senior_by_title = bool(SENIOR_TITLE.search(title)) and not JUNIOR_TITLE.search(title) and not (yrs is not None and yrs < 3)
+    if senior_by_years or senior_by_title:
         hard = True
         reasons.append("senior: " + (f"\"{a.experience_evidence[:100]}\"" if senior_by_years else f"title '{title}'"))
-    if a.category == "not_software" and not TECH_TITLE.search(title):
+    # Qwen's category is a fact proposal, not a decision: "not software" also needs a title without any tech term
+    # AND a posting body without any software signal.
+    if a.category == "not_software" and not TECH_TITLE.search(title) and not SOFTWARE_SIGNAL.search(text or ""):
         hard = True
-        reasons.append(f"not a software role (title '{title}')")
+        reasons.append(f"not a software role (title '{title}', no software terms in the posting)")
+    # Thresholds and fit only split relevant/uncertain (both go to Claude); they never cause a rejection.
     threshold = THRESHOLDS.get(a.category, 60)
     if hard:
         outcome = "irrelevant"
