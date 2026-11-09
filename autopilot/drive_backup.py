@@ -49,11 +49,12 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import ROOT, STATE, load_json, log_event, notify, now, save_json, single_instance  # noqa: E402
+from common import ROOT, STATE, config, load_json, log_event, notify, now, save_json, single_instance  # noqa: E402
 
-ACCOUNT_ROOT = Path.home() / "Library/CloudStorage/GoogleDrive-you@example.com"
+_BK = config().get("backup", {})
+ACCOUNT_ROOT = Path(_BK.get("drive_account_root", "~/Library/CloudStorage/GoogleDrive-you@example.com")).expanduser()
 MY_DRIVE = ACCOUNT_ROOT / "My Drive"
-DEST = MY_DRIVE / "Job Search Autopilot" / "Backups"
+DEST = MY_DRIVE / _BK.get("destination", "Job Search Autopilot/Backups")
 DRIVE_LOG = Path.home() / "Library/Application Support/Google/DriveFS/Logs/drive_fs.txt"
 LAST = STATE / "drive_backup.json"
 

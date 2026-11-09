@@ -1,4 +1,4 @@
-You are the unattended email-check run of the candidate's Phase 1 job-search autopilot. Nobody is watching. Work in `__PROJECT_ROOT__`.
+You are the unattended email-check run of the candidate's job-search autopilot. Nobody is watching. Work in `<PROJECT_ROOT>`.
 
 ## Hard rules
 - The Gmail connector is used **read-only**: only `search_threads` and, for a matched interview invitation or information request, `get_thread`. Never send, reply, forward, draft, label, trash, mark spam or change anything in Gmail.
@@ -14,7 +14,7 @@ Call the Gmail connector `search_threads` with view `THREAD_VIEW_SUMMARY`, pageS
 where `<COMPANIES>` is `OR "<company>"` for every company in `job_search_tracker.csv` whose status is applied, interview or offer (read it with a short python snippet).
 
 Then make a **second** `search_threads` call (same view and pageSize) for work, freelance, payment and account mail:
-`newer_than:2d -in:sent -in:chats (from:example-platform.com OR "Example Freelance Platform" OR from:payoneer.com OR from:wise.com OR from:paypal.com OR from:deel.com OR from:tipalti.com OR subject:(payment OR payout OR invoice OR contract OR agreement OR onboarding OR assignment OR "action required" OR fatura OR ödeme OR sözleşme))`
+`newer_than:2d -in:sent -in:chats (<CONTACTS>)` where `<CONTACTS>` is `from:<domain> OR "<name>"` for every entry in `email.work_contacts` and `email.payment_senders`
 (The contact list mirrors `email.work_contacts` and `email.payment_senders` in `autopilot/config.json`; if that list has more entries, add them the same way.)
 Merge both results into one list and drop duplicate message ids before Step 2.
 

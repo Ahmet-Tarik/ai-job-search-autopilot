@@ -1,0 +1,391 @@
+{
+  "_comment": "Example configuration. Copy to config.json (git-ignored) and edit. See docs/configuration.md and AUTHORIZATION.md.",
+  "timezone": "Europe/Istanbul",
+  "drafting": {
+    "min_rank_score": 70,
+    "daily_draft_cap": 2,
+    "rank_batch_limit": 10,
+    "require_gates_pass": true,
+    "istanbul_policy": "list_only_unless_remote",
+    "do_not_draft": {
+      "example-co_backend-intern": "Example: a job the candidate declined (reason kept for the record)"
+    }
+  },
+  "briefings": {
+    "morning": "09:00",
+    "evening": "22:00",
+    "consider_score": 55
+  },
+  "scrape": {
+    "jobage_days": 3,
+    "limit_per_query": 20,
+    "pause_seconds_between_calls": 2,
+    "linkedin": [
+      {
+        "query": "Junior Software Engineer",
+        "location": "Ankara, Türkiye"
+      },
+      {
+        "query": "Software Engineer Intern",
+        "location": "Ankara, Türkiye"
+      },
+      {
+        "query": "Yazılım Geliştirici",
+        "location": "Ankara, Türkiye"
+      },
+      {
+        "query": "Junior Backend Developer",
+        "location": "Türkiye"
+      },
+      {
+        "query": "Junior .NET Developer",
+        "location": "Türkiye"
+      },
+      {
+        "query": "Junior Python Developer",
+        "location": "Türkiye"
+      },
+      {
+        "query": "Yazılım Stajyeri",
+        "location": "Türkiye"
+      },
+      {
+        "query": "Junior Full Stack Developer",
+        "location": "Türkiye",
+        "remote": "remote"
+      },
+      {
+        "query": "Junior Software Engineer",
+        "location": "European Union",
+        "remote": "remote"
+      },
+      {
+        "query": "Software Engineering Intern 2027",
+        "location": "Türkiye",
+        "pipeline": "internship"
+      },
+      {
+        "query": "Summer Internship 2027 Software",
+        "location": "Türkiye",
+        "pipeline": "internship"
+      },
+      {
+        "query": "Long-term Intern Software",
+        "location": "Türkiye",
+        "pipeline": "internship"
+      },
+      {
+        "query": "Uzun Dönem Stajyer Yazılım",
+        "location": "Türkiye",
+        "pipeline": "internship"
+      },
+      {
+        "query": "Yapay Zeka Stajyer",
+        "location": "Türkiye",
+        "pipeline": "internship"
+      },
+      {
+        "query": "Data Science Intern",
+        "location": "Türkiye",
+        "pipeline": "internship"
+      },
+      {
+        "query": "Graduate Program Software",
+        "location": "Türkiye",
+        "pipeline": "internship"
+      },
+      {
+        "query": "Yeni Mezun Yazılım",
+        "location": "Türkiye",
+        "pipeline": "internship"
+      },
+      {
+        "query": "Backend Intern",
+        "location": "Remote",
+        "remote": "remote",
+        "pipeline": "internship"
+      },
+      {
+        "query": "Junior Software Developer",
+        "location": "Ankara, Türkiye",
+        "pipeline": "junior"
+      },
+      {
+        "query": "Junior Python Developer",
+        "location": "Remote",
+        "remote": "remote",
+        "pipeline": "junior"
+      }
+    ],
+    "freehire": [
+      {
+        "args": [
+          "--seniority",
+          "junior",
+          "--country",
+          "TR"
+        ]
+      },
+      {
+        "args": [
+          "--seniority",
+          "junior",
+          "--category",
+          "backend,fullstack",
+          "--remote",
+          "remote",
+          "--region",
+          "global"
+        ]
+      },
+      {
+        "args": [
+          "-q",
+          "intern",
+          "--category",
+          "backend,fullstack",
+          "--remote",
+          "remote",
+          "--region",
+          "global,eu,mena"
+        ]
+      },
+      {
+        "args": [
+          "--seniority",
+          "junior",
+          "--category",
+          "ml_ai,qa",
+          "--country",
+          "TR"
+        ]
+      }
+    ],
+    "ats": {
+      "_comment": "Official employer job boards (public Lever/Greenhouse APIs). Add slugs for companies you follow.",
+      "max_age_days": 45,
+      "location_must_match": "t[üu]rk|istanbul|İstanbul|ankara|izmir|remote|uzaktan|emea|europe|worldwide|anywhere",
+      "lever": [
+        "insiderone",
+        "trendyol",
+        "picus",
+        "peakgames",
+        "dreamgames",
+        "getmidas",
+        "iyzico",
+        "appnation",
+        "commencis"
+      ],
+      "greenhouse": [
+        "peak",
+        "udemy",
+        "gram"
+      ],
+      "workable": []
+    }
+  },
+  "prefilter": {
+    "_comment": "Deterministic, no-LLM filter applied before ranking. Case-insensitive regexes on the title.",
+    "exclude_title": [
+      "annotat",
+      "\\bai trainer\\b",
+      "\\btrainer\\b",
+      "evaluator",
+      "\\brater\\b",
+      "label(l)?ing",
+      "data entry",
+      "technical support",
+      "support specialist",
+      "support engineer",
+      "help ?desk",
+      "call cent",
+      "customer (service|support)",
+      "\\bsales\\b",
+      "marketing",
+      "account(ant|ing)",
+      "\\bhr\\b",
+      "recruit",
+      "teacher",
+      "tutor",
+      "\\bsenior\\b",
+      "\\bsr\\.?\\b",
+      "\\blead\\b",
+      "principal",
+      "\\bstaff\\b",
+      "\\bmanager\\b",
+      "head of",
+      "architect",
+      "mid[- ]?level",
+      "\\biii\\b",
+      "\\bii\\b",
+      "director",
+      "mimar",
+      "k[ıi]demli",
+      "\\b\\d{1,2}\\+",
+      "product (intern|specialist|manager|analyst)",
+      "elektrik",
+      "electrical",
+      "mechanical",
+      "makine mühendis",
+      "inşaat",
+      "civil eng",
+      "mutfak",
+      "kitchen",
+      "chef",
+      "\\bik\\b",
+      "insan kaynak",
+      "talent",
+      "satış",
+      "muhasebe",
+      "finans",
+      "hukuk",
+      "legal",
+      "gazete",
+      "journalis",
+      "tasarım",
+      "graphic",
+      "sosyal medya"
+    ],
+    "require_title_any": [
+      "developer",
+      "engineer",
+      "software",
+      "yaz[ıi]l[ıi]m",
+      "geli[sş]tirici",
+      "programmer",
+      "programc",
+      "backend",
+      "back-end",
+      "full ?stack",
+      "full-stack",
+      "python",
+      "\\.net",
+      "c#",
+      "asp\\.net",
+      "sdet",
+      "qa automation",
+      "test automation",
+      "intern",
+      "stajyer",
+      "graduate",
+      "new grad",
+      "trainee",
+      "working student",
+      "apprentice",
+      "yeni mezun",
+      "staj",
+      "data scien",
+      "machine learning",
+      "ml engineer",
+      "ai engineer",
+      "yapay zeka"
+    ],
+    "allowed_onsite_countries": [
+      "tr",
+      "az",
+      "at",
+      "be",
+      "bg",
+      "hr",
+      "cy",
+      "cz",
+      "dk",
+      "ee",
+      "fi",
+      "fr",
+      "de",
+      "gr",
+      "hu",
+      "ie",
+      "it",
+      "lv",
+      "lt",
+      "lu",
+      "mt",
+      "nl",
+      "pl",
+      "pt",
+      "ro",
+      "sk",
+      "si",
+      "es",
+      "se"
+    ],
+    "internship_needs_tech": true,
+    "internship_terms": "intern|staj|stajyer|trainee|graduate|new grad|yeni mezun|working student|apprentice",
+    "tech_terms": "software|yaz[ıi]l[ıi]m|developer|geli[sş]tirici|engineer|backend|back-end|full ?stack|frontend|data|veri|\\bai\\b|yapay zeka|machine learning|\\bml\\b|python|\\.net|c#|java|computer|bilgisayar|bilişim|\\bit\\b|qa|test|devops|cloud|cyber|security|siber|php|laravel|javascript|typescript|react|node|golang|\\bgo\\b|kotlin|swift|mobile|ios|android|web|game|unity|sql|database|embedded|firmware|algorithm"
+  },
+  "notify": {
+    "telegram_env_file": "~/.config/job-search/telegram.env",
+    "mac_notification_fallback": true
+  },
+  "email": {
+    "_comment": "Work/freelance contacts monitored besides job applications (added 2026-11-09). 'match' terms are checked against sender name/address, subject and snippet.",
+    "work_contacts": [
+      {
+        "name": "Example Freelance Platform",
+        "match": [
+          "example-platform.com",
+          "example platform"
+        ]
+      }
+    ],
+    "payment_senders": [
+      "payoneer",
+      "wise.com",
+      "paypal",
+      "deel",
+      "remote.com",
+      "stripe",
+      "papara",
+      "tipalti"
+    ]
+  },
+  "shortlist": {
+    "_comment": "Hard eligibility gates are separate from soft fit. Thresholds agreed 2026-11-09: internships 50, junior 60.",
+    "threshold_internship": 50,
+    "threshold_junior": 60,
+    "max_items": 15,
+    "internship_regex": "intern|staj|stajyer|trainee|graduate program|new grad|yeni mezun|summer 20\\d\\d|off-cycle|working student|apprentice|long-term intern|uzun dönem",
+    "junior_regex": "junior|\\bjr\\.?\\b|entry[- ]level|associate|0-2|new graduate|software (engineer|developer)|developer|engineer|yazılım (mühendisi|geliştirici)"
+  },
+  "local_llm": {
+    "_comment": "First-pass screening only (facts + quote-verified hard rejections). Claude stays the planner, ranker and final reviewer. Model chosen by reports/model_compare_20261110 (47 unseen postings).",
+    "enabled": true,
+    "model": "qwen3.5:9b",
+    "host": "http://localhost:11434",
+    "num_ctx": 8192,
+    "timeout": 240,
+    "keep_alive": "2m",
+    "max_input_chars": 12000,
+    "num_predict": 2000,
+    "min_mem_free_pct": 8,
+    "audit_every_nth_rejection": 3,
+    "activated": "Example: record when and why the model was activated (benchmark report, approval).",
+    "fallback_model_installed": "qwen3.5:35b",
+    "fallback_note": "Optional: a second installed model to revert to. Never load two models at once."
+  },
+  "excluded_companies": {
+    "example excluded co": "Example: a company the candidate never wants to see again (history kept)."
+  },
+  "candidate": {
+    "_comment": "Everything the code needs to know about the candidate. The real values live only in your private config.json.",
+    "llm_profile": "Candidate (fictional example): lives in Istanbul, Turkey, and is authorized to work in Turkey. Recent BSc Computer Engineering graduate. Languages: Turkish (native), English (C1). Needs visa sponsorship for onsite work abroad. Verified skills (junior level): Java, Spring Boot, PostgreSQL, REST APIs, JUnit, Docker, Git, TypeScript, React. Experience: one six-month backend internship. Wants graduate programs and 0-2 year backend or full-stack roles.",
+    "home_region_regex": "turkey|t[üu]rkiye|istanbul|i̇stanbul|ankara|izmir|kocaeli|bursa|antalya|gebze|\\bemea\\b|worldwide|anywhere",
+    "undeclared_languages_regex": "german|deutsch|almanca|french|fran[cç]ais|frans[ıi]zca|spanish|espa[nñ]ol|[ıi]spanyolca|dutch|nederlands|polish|polski|italian|italiano|portuguese|romanian|rom[aâ]n[aă]|russian|arabic|arap[cç]a|japanese|chinese|mandarin|korean|swedish|danish|norwegian|finnish|czech|hungarian|greek|hebrew|azerbaijani|ukrainian|bulgarian|croatian|serbian|slovak",
+    "location": {
+      "_comment": "Shortlist ordering (lower = better). Regexes are matched against location + title.",
+      "home_city_regex": "istanbul|İstanbul",
+      "home_country_regex": "t[üu]rk(iye|ey)|istanbul|İstanbul|ankara|izmir|kocaeli|bursa|antalya|\\btr\\b",
+      "home_country_name": "Turkey",
+      "relocation_city_regex": "ankara|izmir",
+      "last_resort_regex": "(?!x)x",
+      "last_resort_note": "work right not verified (last resort)"
+    }
+  },
+  "backup": {
+    "_comment": "Google Drive for desktop sync root and destination folder (see drive_backup.py).",
+    "drive_account_root": "~/Library/CloudStorage/GoogleDrive-you@example.com",
+    "destination": "Job Search Autopilot/Backups"
+  }
+}

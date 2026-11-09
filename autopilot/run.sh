@@ -3,8 +3,10 @@
 # Usage: run.sh scrape | morning | evening
 set -u
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# launchd starts with a minimal PATH: add Homebrew (bun, ollama) and TinyTeX (lualatex/xelatex).
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$HOME/Library/TinyTeX/bin/universal-darwin"
-PY=python3
+# interpreter with pydantic: $PYTHON, else the one recorded by launchd/install.sh, else python3
+PY="${PYTHON:-$(cat "$ROOT/autopilot/.python" 2>/dev/null || command -v python3)}"
 LOG="$ROOT/autopilot/logs/launchd-$1.log"
 mkdir -p "$ROOT/autopilot/logs"
 cd "$ROOT" || exit 1

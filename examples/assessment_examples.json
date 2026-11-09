@@ -1,0 +1,91 @@
+{
+ "_comment": "Synthetic postings run through job_assess.decide() (no model call). Qwen proposes the Assessment; decide() is deterministic.",
+ "relevant_example": {
+  "assessment": {
+   "company": "Acme Cloud",
+   "position": "Junior Software Engineer",
+   "category": "junior",
+   "location": "Türkiye (Remote)",
+   "work_mode": "remote",
+   "remote_from_turkey": "allowed",
+   "eligibility": "eligible",
+   "eligibility_evidence": [
+    "remote within Turkey"
+   ],
+   "years_required": 0,
+   "experience_evidence": "0-2 years of experience",
+   "languages_required": [
+    "English"
+   ],
+   "language_evidence": [
+    "Fluent English"
+   ],
+   "required_skills": [
+    "Python",
+    "SQL",
+    "REST APIs",
+    "Git"
+   ],
+   "preferred_skills": [
+    "Docker",
+    "FastAPI"
+   ],
+   "matched_skills": [
+    "Python",
+    "SQL",
+    "REST APIs",
+    "Git",
+    "Docker",
+    "FastAPI"
+   ],
+   "missing_skills": [],
+   "fit_score": 78,
+   "summary": "Remote junior backend role in Turkey; Python/SQL stack matches."
+  },
+  "decision": {
+   "outcome": "relevant",
+   "eligibility": "eligible",
+   "hard_reasons": [],
+   "threshold": 60,
+   "needs_claude_review": false,
+   "borderline": false,
+   "evidence_dropped": 0,
+   "required_skills_verified": 4,
+   "required_skills_total": 4
+  }
+ },
+ "rejected_with_verified_quote": {
+  "posting": "We need a Backend Engineer with at least 5 years of experience in Go and Kubernetes. Based in Berlin.",
+  "decision": {
+   "outcome": "irrelevant",
+   "eligibility": "unknown",
+   "hard_reasons": [
+    "senior: \"at least 5 years of experience\""
+   ],
+   "threshold": 60,
+   "needs_claude_review": false,
+   "borderline": false,
+   "evidence_dropped": 0,
+   "required_skills_verified": 2,
+   "required_skills_total": 2
+  }
+ },
+ "fabricated_quote_discarded": {
+  "qwen_claimed": [
+   "Only EU citizens may apply"
+  ],
+  "decision": {
+   "outcome": "uncertain",
+   "eligibility": "unknown",
+   "hard_reasons": [
+    "fit 40 below 60 (no hard reason - preserved)"
+   ],
+   "threshold": 60,
+   "needs_claude_review": true,
+   "borderline": false,
+   "evidence_dropped": 1,
+   "required_skills_verified": 2,
+   "required_skills_total": 2
+  }
+ }
+}

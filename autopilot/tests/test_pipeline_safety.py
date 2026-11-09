@@ -12,7 +12,8 @@ import posting_status as ps  # noqa: E402
 import shortlist  # noqa: E402
 import telegram_inbox as ti  # noqa: E402
 
-CONFIG = Path(__file__).resolve().parents[1] / "config.json"
+_AP = Path(__file__).resolve().parents[1]
+CONFIG = _AP / "config.json" if (_AP / "config.json").exists() else _AP / "config.example.json"
 
 
 def _isolate(monkeypatch, tmp):
@@ -42,7 +43,7 @@ def test_reply_to_older_list_selects_that_lists_job(monkeypatch, tmp_path):
 
 def test_excluded_company_cannot_be_selected(monkeypatch, tmp_path):
     _isolate(monkeypatch, tmp_path)
-    shortlist.publish({"date": "2026-11-10", "items": [_item(1, "sp", "Example Excluded Co")]})
+    shortlist.publish({"date": "2026-11-10", "items": [_item(1, "ex", "Example Excluded Co")]})
     out = ti.handle("apply", [1])
     assert "permanently excluded" in out
     assert json.loads((tmp_path / "sel.json").read_text()) == []

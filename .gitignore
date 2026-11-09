@@ -1,0 +1,16 @@
+# Private data and runtime state - never commit
+autopilot/config.json
+autopilot/form_answers.json
+autopilot/bench_gold.json
+autopilot/.python
+autopilot/state/
+autopilot/logs/
+autopilot/reports/
+*.env
+.env*
+
+# Python
+__pycache__/
+.pytest_cache/
+*.pyc
+.DS_Store

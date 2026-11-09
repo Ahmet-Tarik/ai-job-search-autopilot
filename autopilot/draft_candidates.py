@@ -18,7 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import APPS, config, excluded_company, now, read_events, seen_jobs, tracker_rows  # noqa: E402
 
 TURKEY = re.compile(r"t[üu]rk(iye|ey)|istanbul|İstanbul|ankara|izmir|kocaeli|bursa|antalya|\btr\b", re.I)
-AZ = re.compile(r"(?!x)x", re.I)
+AZ = re.compile(r"azerbaijan|baku|bak[ıi]", re.I)
 REMOTE = re.compile(r"remote|uzaktan|worldwide|anywhere|emea", re.I)
 
 

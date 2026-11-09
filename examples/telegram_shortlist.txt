@@ -1,0 +1,19 @@
+Job shortlist 2026-11-10-1 - reply e.g. 'apply to 1, 3' (numbers refer to THIS list only)
+
+1. [INTERN/NEW-GRAD] Backend Developer Intern (Java) - Example Labs
+   Istanbul, Türkiye | home city onsite/hybrid | fit 78 | eligible | deadline 2026-12-01
+   route: direct ATS form
+   https://jobs.lever.co/example-labs/00000000-0000-0000-0000-000000000000
+2. [JUNIOR] Junior Software Engineer - Acme Cloud
+   Türkiye (Remote) | remote, Turkey | fit 71 | eligible
+   route: LinkedIn (verified before submission)
+   https://www.linkedin.com/jobs/view/0000000000
+3. [INTERN/NEW-GRAD] Graduate Java Developer - Northwind GmbH
+   Berlin, Germany | onsite abroad | fit 64 | uncertain
+   risks: visa sponsorship not stated
+   route: direct ATS form
+   https://boards.greenhouse.io/northwind/jobs/0000000
+
+Filtered by hard eligibility: 4 location not eligible, 1 already applied
+
+Replying 'apply to N' authorizes preparing tailored documents and the form plan. Submission is confirmed by you in Claude ('submit packets ...').

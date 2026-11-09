@@ -1,0 +1,48 @@
+{
+ "_comment": "Format example. The real gold set (reviewed expectations for real postings) is private: create bench_gold.json with keys from your own job_scraper/seen_jobs.json. keep=true: suitable, must never be 'irrelevant'. irrelevant=true: has a hard, quotable reason. eligibility: location/work authorization only.",
+ "items": [
+  {
+   "key": "example-co_junior-backend-developer",
+   "group": "junior, home-country remote",
+   "keep": true,
+   "eligibility": "eligible",
+   "category": "junior",
+   "key_terms": [
+    "Python",
+    "SQL"
+   ]
+  },
+  {
+   "key": "example-labs_software-engineering-intern",
+   "group": "internship, abroad, sponsorship unknown",
+   "keep": true,
+   "eligibility": "unknown",
+   "category": "intern",
+   "key_terms": [
+    "C#",
+    ".NET"
+   ]
+  },
+  {
+   "key": "example-gmbh_backend-engineer",
+   "group": "ineligible: work permit required, no sponsorship",
+   "irrelevant": true,
+   "eligibility": "ineligible",
+   "category": "any",
+   "key_terms": [
+    "Java"
+   ]
+  },
+  {
+   "key": "example-corp_senior-backend-engineer",
+   "group": "senior: 5+ years",
+   "irrelevant": true,
+   "eligibility": "eligible",
+   "category": "senior",
+   "key_terms": [
+    "Go",
+    "Kubernetes"
+   ]
+  }
+ ]
+}

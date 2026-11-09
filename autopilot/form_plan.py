@@ -27,7 +27,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import APPS, AUTOPILOT, ROOT, load_json, log_event, save_json  # noqa: E402
 
-ANS = json.loads((AUTOPILOT / "form_answers.json").read_text(encoding="utf-8"))
+_ANS_PATH = AUTOPILOT / "form_answers.json"   # private, git-ignored; the example only shows the format
+ANS = json.loads((_ANS_PATH if _ANS_PATH.exists() else AUTOPILOT / "form_answers.example.json").read_text(encoding="utf-8"))
 
 # label regex -> form_answers key (first match wins)
 RULES = [

@@ -1,0 +1,27 @@
+{
+  "_comment": "Standard application-form answers approved by the candidate. Fill a form field ONLY from this file or the candidate profile. Anything under pause_on, or any question not covered, pauses the application.",
+  "full_name": "Alex Example",
+  "email": "alex@example.com",
+  "phone": "+00 000 000 00 00",
+  "current_location": "City, Country",
+  "linkedin_url": "https://www.linkedin.com/in/example/",
+  "portfolio_or_github_url": "https://github.com/example",
+  "university": "Example University, BSc Software Engineering",
+  "degree_completed": "No - currently a student",
+  "authorized_to_work_in_home_country": "Yes",
+  "requires_sponsorship_abroad": "Yes",
+  "english_level": "B2",
+  "pause_on": [
+    "salary expectation",
+    "notice period",
+    "earliest start date",
+    "willingness to relocate",
+    "diversity questions",
+    "criminal record or background-check consent",
+    "free-text motivation or essay questions",
+    "account creation, login, email verification",
+    "CAPTCHA or bot checks",
+    "assessments or coding tests",
+    "any question whose truthful answer is not in this file or the candidate profile"
+  ]
+}

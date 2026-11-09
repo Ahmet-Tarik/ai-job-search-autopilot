@@ -53,7 +53,11 @@ def main() -> int:
     if not st["installed"] or st["other_model_loaded"]:
         print(json.dumps({"cannot_run": st}))
         return 1
-    gold = json.loads((AUTOPILOT / "bench_gold.json").read_text(encoding="utf-8"))["items"]
+    gold_path = AUTOPILOT / "bench_gold.json"   # private: reviewed expectations for your real postings
+    if not gold_path.exists():
+        print("create autopilot/bench_gold.json (format: bench_gold.example.json) from your own seen jobs")
+        return 1
+    gold = json.loads(gold_path.read_text(encoding="utf-8"))["items"]
     if a.limit:
         gold = gold[: a.limit]
     seen = seen_jobs()

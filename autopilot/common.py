@@ -20,8 +20,8 @@ import urllib.request
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-ROOT = Path(__file__).resolve().parents[1]
-AUTOPILOT = ROOT / "autopilot"
+ROOT = Path(os.environ.get("JOB_SEARCH_ROOT") or Path(__file__).resolve().parents[1])   # workspace root (ai-job-search)
+AUTOPILOT = Path(__file__).resolve().parent
 STATE = AUTOPILOT / "state"
 LOGS = AUTOPILOT / "logs"
 REPORTS = AUTOPILOT / "reports"
@@ -35,7 +35,11 @@ for _d in (STATE, LOGS, REPORTS):
 
 
 def config() -> dict:
-    return json.loads((AUTOPILOT / "config.json").read_text(encoding="utf-8"))
+    """Private config.json (git-ignored); falls back to config.example.json so tests and a fresh clone work."""
+    path = AUTOPILOT / "config.json"
+    if not path.exists():
+        path = AUTOPILOT / "config.example.json"
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def _company_norm(name: str) -> str:

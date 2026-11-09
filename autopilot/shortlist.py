@@ -9,7 +9,7 @@ Hard gates (never shortlisted): location FAIL (e.g. remote restricted to other c
 "no sponsorship" abroad), language FAIL (undeclared language required), excluded by the
 candidate (do_not_draft), already applied, closed/expired.
 Uncertain (shortlisted, flagged): sponsorship not stated, Istanbul onsite (relocation),
-last-resort locations (work right unverified), language bar above B2. Only Claude-ranked jobs are listed.
+Azerbaijan (work right unverified), language bar above B2. Only Claude-ranked jobs are listed.
 
 Numbers are stable for the day: "apply to 1, 3" always refers to state/shortlist_<date>.json.
 
@@ -28,11 +28,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import STATE, config, excluded_company, load_json, log_event, now, notify, save_json, seen_jobs, send_telegram_ids, tracker_rows  # noqa: E402
 
-TR = re.compile(r"t[üu]rk(iye|ey)|istanbul|İstanbul|ankara|izmir|kocaeli|bursa|antalya|\btr\b", re.I)
-IST = re.compile(r"istanbul|İstanbul", re.I)
-ANK = re.compile(r"ankara", re.I)
-AZ = re.compile(r"(?!x)x", re.I)
+_LOC = config().get("candidate", {}).get("location", {})
+TR = re.compile(_LOC.get("home_country_regex", r"(?!x)x"), re.I)          # home country
+IST = re.compile(_LOC.get("relocation_city_regex", r"(?!x)x"), re.I)      # big city that would need relocation
+ANK = re.compile(_LOC.get("home_city_regex", r"(?!x)x"), re.I)            # home city
+AZ = re.compile(_LOC.get("last_resort_regex", r"(?!x)x"), re.I)           # last-resort location
 REMOTE = re.compile(r"remote|uzaktan|worldwide|anywhere|emea", re.I)
+HOME = _LOC.get("home_country_name", "home country")
 
 
 def category(title: str, cfg: dict) -> str:
@@ -47,27 +49,27 @@ def location_info(e: dict) -> tuple[int, str, str | None]:
     verdict = e.get("location_verdict")
     multi_country = (e.get("location") or "").count(",") >= 3
     if multi_country:
-        if re.search(r"turkey|türkiye", loc, re.I):
-            return 3, "remote, multi-country list includes Turkey", None
-        return 5, "remote, country list (Turkey not listed)", "Turkey not in the allowed countries"
+        if TR.search(loc):
+            return 3, f"remote, multi-country list includes {HOME}", None
+        return 5, f"remote, country list ({HOME} not listed)", f"{HOME} not in the allowed countries"
     if AZ.search(loc):
-        return 6, "last-resort location", "work right unverified (last resort)"
+        return 6, "last-resort location", _LOC.get("last_resort_note", "last resort")
     if ANK.search(loc):
-        return 1, ("Ankara, remote possible" if REMOTE.search(loc) else "Ankara onsite/hybrid"), None
+        return 1, ("home city, remote possible" if REMOTE.search(loc) else "home city onsite/hybrid"), None
     if TR.search(loc) and REMOTE.search(loc):
-        return 2, "remote, Turkey", None
+        return 2, f"remote, {HOME}", None
     if IST.search(loc):
         if REMOTE.search(loc):
-            return 2, "remote (Istanbul company)", None
-        return 4, "Istanbul onsite/hybrid", "relocation from Ankara"
+            return 2, "remote (relocation-city company)", None
+        return 4, "relocation-city onsite/hybrid", "relocation needed"
     if TR.search(loc):
         if verdict == "PASS":
-            return 2, "Turkey - eligible (confirmed in review)", None
-        return 3, "Turkey, outside Ankara", "commute/relocation from Ankara or remote not confirmed"
+            return 2, f"{HOME} - eligible (confirmed in review)", None
+        return 3, f"{HOME}, outside the home city", "commute/relocation or remote not confirmed"
     if REMOTE.search(loc):
         if verdict == "PASS":
-            return 3, "remote, open to Turkey", None
-        return 3, "remote (eligibility unclear)", "confirm candidates in Turkey are accepted"
+            return 3, f"remote, open to {HOME}", None
+        return 3, "remote (eligibility unclear)", f"confirm candidates in {HOME} are accepted"
     if verdict == "PASS":
         return 5, "onsite abroad, sponsorship stated", None
     return 5, "onsite abroad", "visa sponsorship not stated"
