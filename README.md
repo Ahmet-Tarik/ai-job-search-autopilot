@@ -13,6 +13,10 @@ LaTeX CV/cover-letter templates. This repository contains the autopilot layer bu
 scheduling, local-model screening, safety rules, shortlist and approval flow, application packets, email
 monitoring and backups.
 
+**Tech stack:** Python 3 (stdlib + Pydantic) · Ollama with Qwen 3.5 9B · Claude (Claude Desktop scheduled tasks,
+agents and skills) · Lever and Greenhouse public APIs · Telegram Bot API · Gmail, Calendar and Drive connectors ·
+macOS launchd · LaTeX · pytest and GitHub Actions
+
 > **Status:** Phase 1 is implemented and has run unattended for one candidate since November 2026.
 > It discovers, screens, ranks, shortlists and prepares applications automatically. **Submission is
 > never automatic**, and no application has yet been submitted end to end by the automation; the one real
@@ -34,6 +38,21 @@ The design goal was therefore **maximum automation with hard safety boundaries**
 - a job is only rejected automatically with a **quote that verifiably appears in the posting**;
 - nothing leaves the machine on the candidate's behalf without their explicit approval.
 
+## Engineering highlights
+
+- **LLM output treated as untrusted:** schema-validated JSON, with every evidence quote checked against the source
+  text before it can affect a decision.
+- **Model choice backed by measurement:** two local models compared on 47 unseen, independently labelled postings
+  (accuracy, false negatives, latency, RAM and swap). The smaller model was chosen for equal decisions at a third
+  of the memory. See [docs/benchmarks.md](docs/benchmarks.md).
+- **Fail-safe by design:** every failure path (model missing, busy, out of memory, invalid output) falls back to
+  human or Claude review instead of discarding a job. Audit sampling with an automatic switch-off catches drift.
+- **Human-in-the-loop boundaries in code, not just policy:** frozen shortlist numbering, packet state machine,
+  approval-gated submission, strict application-route matching.
+- **Operational reliability:** file-locked state shared by independent schedulers, structured run logs, and
+  verified, restore-tested backups.
+- **Regression tests for every bug found in benchmarks** (27 tests, no network or model calls), run in CI.
+
 ## Key features
 
 | Area | What it does |
@@ -54,7 +73,7 @@ The design goal was therefore **maximum automation with hard safety boundaries**
 ## Architecture
 
 ```mermaid
-flowchart LR
+flowchart TB
     subgraph launchd["macOS launchd (no LLM)"]
         S["scrape_daily.py<br/>07:20 · 12:20 · 17:20"]
         LS["local_screen.py<br/>+ local_audit.py"]
@@ -227,13 +246,13 @@ Model benchmarks (`autopilot/bench_local.py`) need Ollama and a private, reviewe
 - Qwen 9B first pass with audit sampling and automatic switch-off
 - Claude ranking and drafting runs, packets, form plans, posting-status and route checks
 - read-only email monitoring with tracker updates and calendar proposals
+- continuous integration (pytest on macOS via GitHub Actions)
 
 **Not yet demonstrated**
 - An application submitted end to end by the automation. The submission flow exists (`prompts/submit.md`),
   but its first real use ended correctly as "closed" when the posting closed before submission.
 
 **Planned**
-- Continuous integration for the test suite
 - Longer-term evaluation of the local model on live postings (`local_report.py`, `local_audit.py`)
 - A more general location and eligibility model (the prompt rules and the `remote_from_turkey` field are tuned to the Turkish job market today)
 - Integration into a broader personal-assistant architecture
@@ -259,6 +278,12 @@ examples/             synthetic outputs produced by the real code
 ## Author
 
 Ahmet Tarık Sevinç ([github.com/Ahmet-Tarik](https://github.com/Ahmet-Tarik)), software engineering student.
+
+## Acknowledgments
+
+This is my portfolio project: I defined the requirements, made the design, safety and model-selection decisions,
+and operate the system daily. Development was assisted by [Claude Code](https://www.anthropic.com/claude-code),
+which helped write and refactor the code, tests, benchmarks and documentation under my direction and review.
 
 ## Credits and license
 
